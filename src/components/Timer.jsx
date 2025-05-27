@@ -21,7 +21,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast, Toaster } from "sonner";
-import roosterSound from "../assets/mixkit-short-rooster-crowing-2470.wav";
+import roosterSound from "../assets/mixkit-happy-bells-notification-937.wav";
 
 function Timer() {
   const [time, setTime] = useState(0);
