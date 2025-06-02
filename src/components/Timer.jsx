@@ -21,11 +21,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast, Toaster } from "sonner";
-import roosterSound from "../assets/mixkit-happy-bells-notification-937.wav";
+import alarm from "../assets/mixkit-happy-bells-notification-937.wav";
+import ColorSelector from "./ColorSelector";
 
 function Timer() {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [color, setColor] = useState("");
   //
   const [hourLimit, setHourLimit] = useState(0);
   const [minuteLimit, setMinuteLimit] = useState(0);
@@ -35,9 +37,13 @@ function Timer() {
     hourLimit * 3600 * 1000 + minuteLimit * 60 * 1000 + secondLimit * 1000;
 
   const playSound = () => {
-    const audio = new Audio(roosterSound);
+    const audio = new Audio(alarm);
     audio.play();
   };
+
+  useEffect(() => {
+    document.body.style.backgroundImage = `url(${color})`;
+  }, [color]);
 
   useEffect(() => {
     let interval;
@@ -191,6 +197,7 @@ function Timer() {
         </Button>
       </div>
       <Toaster />
+      <ColorSelector setColor={setColor} />
     </div>
   );
 }

@@ -120,7 +120,6 @@
 }
 
 body {
-  background-image: url(./assets/purple-desktop-image.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;
@@ -135,7 +134,7 @@ body {
   margin: 212px auto;
   width: 60%;
   height: auto;
-  background-color: rgba(182, 163, 255, 0.85);
+  background-color: rgba(182, 163, 255, 0.70);
   overflow: visible;
   border-radius: 10px;
 }
