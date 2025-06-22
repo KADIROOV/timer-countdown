@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Check,
-  Pause,
-  Play,
-  RotateCcw,
-  Settings,
-  Trash,
-  X,
-} from "lucide-react";
+import { Check, Pause, Play, Settings, Trash, X } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,13 +43,13 @@ function Timer() {
       interval = setInterval(() => {
         setTime((prev) => {
           if (prev + 100 >= limitMilliseconds) {
-            clearInterval(interval);
             playSound();
+            clearInterval(interval);
             setIsRunning(false);
             toast.success("Timer completed!", {
               style: {
-                background: "rgba(182, 163, 255, 0.55)",
-                color: "#eae6ff",
+                background: "rgba(104, 71, 236, 0.55)",
+                color: "#ffff",
               },
             });
             return limitMilliseconds;
@@ -94,8 +86,8 @@ function Timer() {
     if (!limitMilliseconds || isNaN(limitMilliseconds)) {
       toast.error("set timer please", {
         style: {
-          background: "rgba(182, 163, 255, 0.55)",
-          color: "#eae6ff",
+          background: "rgba(104, 71, 236, 0.55)",
+          color: "#ffff",
         },
       });
       return;
@@ -172,7 +164,7 @@ function Timer() {
               >
                 <X />
               </AlertDialogCancel>
-              <AlertDialogAction className="btn-confirm">
+              <AlertDialogAction className="btn-confirm" onClick={handleStart}>
                 <Check />
               </AlertDialogAction>
             </AlertDialogFooter>
