@@ -20,13 +20,14 @@ function Timer() {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [color, setColor] = useState("");
+  const [startTime, setStartTime] = useState(null);
   //
-  const [hourLimit, setHourLimit] = useState(0);
-  const [minuteLimit, setMinuteLimit] = useState(0);
-  const [secondLimit, setSecondLimit] = useState(0);
+  const [hourLimit, setHourLimit] = useState("");
+  const [minuteLimit, setMinuteLimit] = useState("");
+  const [secondLimit, setSecondLimit] = useState("");
 
   const limitMilliseconds =
-    hourLimit * 3600 * 1000 + minuteLimit * 60 * 1000 + secondLimit * 1000;
+    (Number(hourLimit) || 0) * 3600 * 1000 + (Number(minuteLimit) || 0) * 60 * 1000 + (Number(secondLimit) || 0) * 1000;
 
   const playSound = () => {
     const audio = new Audio(alarm);
@@ -41,8 +42,11 @@ function Timer() {
     let interval;
     if (isRunning && limitMilliseconds > 0) {
       interval = setInterval(() => {
-        setTime((prev) => {
-          if (prev + 100 >= limitMilliseconds) {
+        setTime(() => {
+          const currentTime = Date.now();
+          const elapsedTime = currentTime - startTime;
+          
+          if (elapsedTime >= limitMilliseconds) {
             playSound();
             clearInterval(interval);
             setIsRunning(false);
@@ -55,18 +59,19 @@ function Timer() {
             return limitMilliseconds;
           }
 
-          return (prev += 100);
+          return elapsedTime;
         });
       }, 100);
     }
     return () => clearInterval(interval);
-  }, [isRunning, limitMilliseconds]);
+  }, [isRunning, limitMilliseconds, startTime]);
 
   const displayTime = () => {
-    const h = Math.floor(time / 3600000);
-    const m = Math.floor((time % 3600000) / 60000);
-    const s = Math.floor((time % 60000) / 1000);
-    const ms = Math.floor((time % 1000) / 100);
+    const remainingTime = Math.max(0, limitMilliseconds - time);
+    const h = Math.floor(remainingTime / 3600000);
+    const m = Math.floor((remainingTime % 3600000) / 60000);
+    const s = Math.floor((remainingTime % 60000) / 1000);
+    const ms = Math.floor((remainingTime % 1000) / 100);
     return { h, m, s, ms };
   };
 
@@ -92,12 +97,14 @@ function Timer() {
       });
       return;
     }
+    setStartTime(Date.now());
     setIsRunning(true);
   };
   const handlePause = () => setIsRunning(false);
   const handleReset = () => {
     setIsRunning(false);
     setTime(0);
+    setStartTime(null);
     setSecondLimit("");
     setMinuteLimit("");
     setHourLimit("");
@@ -105,7 +112,7 @@ function Timer() {
 
   return (
     <div className="main-container">
-      <h1 className="main-title">CountDown Timer</h1>
+      <h1 className="main-title ">CountDown Timer <span className="text-l">v1.1</span></h1>
       <h1 className="timer-display">
         <TimeDisplay h={h} m={m} s={s} ms={ms} />
       </h1>
@@ -126,7 +133,7 @@ function Timer() {
                   min={0}
                   placeholder="Hour"
                   value={hourLimit}
-                  onChange={(e) => setHourLimit(Number(e.target.value))}
+                  onChange={(e) => setHourLimit(e.target.value)}
                   disabled={isRunning}
                 />
                 <span className="timer-bet"></span>
@@ -136,7 +143,7 @@ function Timer() {
                   min={0}
                   placeholder="Min"
                   value={minuteLimit}
-                  onChange={(e) => setMinuteLimit(Number(e.target.value))}
+                  onChange={(e) => setMinuteLimit(e.target.value)}
                   disabled={isRunning}
                 />
                 <span className="timer-bet"></span>
@@ -146,7 +153,7 @@ function Timer() {
                   min={0}
                   placeholder="Sec"
                   value={secondLimit}
-                  onChange={(e) => setSecondLimit(Number(e.target.value))}
+                  onChange={(e) => setSecondLimit(e.target.value)}
                   disabled={isRunning}
                 />
               </AlertDialogDescription>
@@ -157,6 +164,7 @@ function Timer() {
                 onClick={() => {
                   setIsRunning(false);
                   setTime(0);
+                  setStartTime(null);
                   setHourLimit("");
                   setMinuteLimit("");
                   setSecondLimit("");
@@ -168,7 +176,7 @@ function Timer() {
                 <Check />
               </AlertDialogAction>
             </AlertDialogFooter>
-          </AlertDialogContent>
+            </AlertDialogContent>
         </AlertDialog>
         <Button
           className="btn-start btn"
